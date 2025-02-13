@@ -8,7 +8,6 @@ const loginBtn = document.querySelector('#login-btn');
 const loginUser = document.querySelector('#login-user');
 const userName = document.querySelector('#user-profile-name');
 const userProfileImage = document.querySelector('#user-profile-img');
-const cardContainer = document.querySelector('#card-container');
 
 // Check user authentication status
 onAuthStateChanged(auth, async (user) => {
