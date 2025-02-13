@@ -1,66 +1,87 @@
-import { onAuthStateChanged, } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
 import { auth, db } from "./firebaseconfig.js";
-import { collection, addDoc, Timestamp,} from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
+import { collection, addDoc, getDocs, query, where, Timestamp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
 
-const form = document.querySelector(`#form`)
-const title = document.querySelector(`#title`)
-const description = document.querySelector(`#description`)
+const form = document.querySelector(`#form`);
+const description = document.querySelector(`#description`);
+let imagePost = "";
 
-
-let imagePost = ""
-
-onAuthStateChanged(auth,(user) => {
+onAuthStateChanged(auth, async (user) => {
     if (user) {
-        const uid = user.uid;
-        console.log(uid);
-
+        console.log("User logged in:", user.uid);
     } else {
-        window.location = "login.html"
+        window.location = "login.html";
     }
 });
 
-// Cloudinary upload widget initialization
+// ✅ Function to fetch user data from Firestore
+async function getUserData(uid) {
+    const usersRef = collection(db, "users");
+    const q = query(usersRef, where("uid", "==", uid));
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+        console.error("User data not found!");
+        return null;
+    }
+
+    let userData = null;
+    querySnapshot.forEach((doc) => {
+        userData = doc.data();
+    });
+
+    return userData;
+}
+
+// ✅ Cloudinary Image Upload
 let myWidget = cloudinary.createUploadWidget({
     cloudName: 'dhcqfjulx',
     uploadPreset: 'Blogging App'
 }, (error, result) => {
     if (!error && result && result.event === "success") {
-        console.log('Done! Here is the image info: ', result.info);
-        // Store the image URL once uploaded successfully
+        console.log('Image Uploaded:', result.info.secure_url);
         imagePost = result.info.secure_url;
     }
 });
 
-// Trigger Cloudinary upload widget on button click
 document.getElementById("upload_widget").addEventListener("click", function () {
     myWidget.open();
 }, false);
 
-form.addEventListener("submit",async (e)=>{
+// ✅ Form Submit Event Listener
+form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // Check if the user has uploaded an image
     if (!imagePost) {
-        alert("Please upload a profile picture first.");
+        alert("Please upload an image first.");
         return;
     }
-    
-    try {
-            const docRef = await addDoc(collection(db, "blogs"), {
-                title:title.value,
-                description: description.value,
-                profileImg:imagePost,
-                uid: auth.currentUser.uid,
-                date: Timestamp.fromDate(new Date()),
-                
 
-            });
-           
-            console.log("Document written with ID are sumbit of dashborad: ", docRef.id);
-            window.location = 'index.html'
-        } 
-        catch (e) {
-            console.error("Error adding document: ", e);
+    try {
+        const user = auth.currentUser;
+        if (!user) {
+            console.error("No authenticated user found.");
+            return;
         }
-    
-})
+
+        const userData = await getUserData(user.uid);
+        if (!userData) {
+            console.error("User data not found in Firestore!");
+            return;
+        }
+
+        await addDoc(collection(db, "blogs"), {
+            description: description.value,
+            profileImg: imagePost,
+            uid: user.uid,
+            userName: `${userData.firstName} ${userData.lastName}`, // ✅ Save correct name
+            userImage: userData.profileImage, // ✅ Save correct profile image
+            date: Timestamp.fromDate(new Date()),
+        });
+
+        console.log("Post added successfully!");
+        window.location = 'index.html';
+    } catch (error) {
+        console.error("Error adding post:", error);
+    }
+});

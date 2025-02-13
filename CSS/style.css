@@ -1,0 +1,131 @@
+/* Global Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #f0f2f5;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+/* Dark Mode */
+body.dark-mode {
+    background: #18191a;
+    color: #e4e6eb;
+}
+
+/* Navbar Styling */
+.navbar {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    transition: background 0.3s;
+}
+
+body.dark-mode .navbar {
+    background: rgba(36, 37, 38, 0.9);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #1877f2;
+}
+
+#login-user img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Card Styling */
+.card {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(15px);
+    border-radius: 12px;
+    width: 75%;
+    margin:20px auto;
+    height: 25%;
+    box-shadow: 0 20px 20px rgba(0, 0, 0, 0.15);
+
+}
+
+body.dark-mode .card {
+    background: rgba(36, 37, 38, 0.9);
+    box-shadow: 0 6px 12px rgba(255, 255, 255, 0.1);
+}
+
+
+.card-header {
+    background: transparent;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+}
+
+body.dark-mode .card-header {
+    border-bottom: 1px solid #3a3b3c;
+}
+
+.card-header img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.card-body img {
+    border-radius: 10px;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+
+
+/* Button Styles */
+.btn-primary {
+    background-color: #1877f2;
+    border: none;
+    transition: background 0.3s, transform 0.2s;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.btn-primary:hover {
+    background-color: #145dbf;
+    transform: scale(1.05);
+}
+
+/* Dark Mode Button */
+.dark-mode-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #1877f2;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.dark-mode-toggle:hover {
+    background: #145dbf;
+    transform: scale(1.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 10px;
+    }
+    .card-body img {
+        max-height: 350px;
+    }
+}
