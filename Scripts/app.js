@@ -56,18 +56,18 @@ async function renderPosts() {
 
     querySnapshot.forEach((doc) => {
         const post = doc.data();
-        console.log("Fetched Post Data:", post); // 👈 Debugging
+        console.log("Fetched Post Data:", post); // Debugging
 
-        if (!post.userName || !post.userImage) {
+        if (!post.userName || !post.userImage || !post.uid) {
             console.warn("User data missing in post!", post);
         }
 
         const postElement = `
         <div class="card">
             <div class="card-header d-flex align-items-center">
-                <img src="${post.userImage || 'default-profile.png'}" class="rounded-circle" alt="Profile Image" style="width: 50px; height: 50px; object-fit: cover;">
+                <img src="${post.userImage}" class="rounded-circle" alt="Profile Image" style="width: 50px; height: 50px; object-fit: cover;">
                 <div class="ms-3">
-                    <h6 class="mb-0">${post.userName || 'Unknown User'}</h6>
+                    <h6 class="mb-0 fw-bold fs-6">${post.userName}</h6>
                     <small class="text-muted">Posted on ${post.date.toDate().toLocaleString()}</small>
                 </div>
             </div>
@@ -76,9 +76,32 @@ async function renderPosts() {
                 <p>${post.description}</p>
                 <img class="img-fluid rounded" style="width: 100%;" src="${post.profileImg}" alt="Post Image">
             </div>
+
+            <div class="text-center mt-3">
+                <a href="" class="see-more" data-user-id="${post.uid}">See more From This User</a>
+            </div>
         </div>`;
 
         cardContainer.innerHTML += postElement;
     });
+
+    document.addEventListener("click", (event) => {
+        if (event.target.classList.contains("see-more")) {
+            event.preventDefault();
+            const userId = event.target.getAttribute("data-user-id");
+    
+            console.log(" Click Event Triggered!");
+            console.log(" Found User ID:", userId);
+    
+            if (userId) {
+                localStorage.setItem("selectedUserId", userId);
+                console.log(" Stored in Local Storage:", localStorage.getItem("selectedUserId"));
+                window.location.href = "./singleUser.html";
+            } else {
+                console.error(" User ID Not Found in Link!");
+            }
+        }
+    });
+    
 }
 
