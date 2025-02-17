@@ -36,7 +36,7 @@ async function getUserData(uid) {
 // ✅ Cloudinary Image Upload
 let myWidget = cloudinary.createUploadWidget({
     cloudName: 'dhcqfjulx',
-    uploadPreset: 'Blogging App'
+    uploadPreset: 'ThinkSpot'
 }, (error, result) => {
     if (!error && result && result.event === "success") {
         console.log('Image Uploaded:', result.info.secure_url);

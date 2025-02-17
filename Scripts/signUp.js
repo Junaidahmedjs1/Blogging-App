@@ -14,7 +14,7 @@ let userProfilePicUrl = "";
 // Cloudinary upload widget initialization
 let myWidget = cloudinary.createUploadWidget({
     cloudName: 'dhcqfjulx',
-    uploadPreset: 'Blogging App'
+    uploadPreset: 'ThinkSpot'
 }, (error, result) => {
     if (!error && result && result.event === "success") {
         console.log('Done! Here is the image info: ', result.info);
